@@ -18,16 +18,16 @@ class GreetingAppApplicationTests {
 
 	@Test
 	void contextLoads() {
-		// Test passes if the Spring Application context loads successfully.
+		// Application context loads successfully.
 	}
 
 	@Test
 	void testGetGreetingById() {
-		// First, save a greeting message.
+		// Save a greeting for testing
 		Greeting savedGreeting = greetingService.saveGreeting("Test Greeting");
 		Long id = savedGreeting.getId();
 
-		// Now, retrieve it by ID.
+		// Retrieve by ID and check the message
 		Optional<Greeting> retrievedGreeting = greetingService.getGreetingById(id);
 		assertTrue(retrievedGreeting.isPresent());
 		assertEquals("Test Greeting", retrievedGreeting.get().getMessage());

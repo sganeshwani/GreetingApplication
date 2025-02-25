@@ -5,6 +5,7 @@ import com.example.greetingapp.repository.GreetingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,8 +30,13 @@ public class GreetingService {
         return greetingRepository.save(greeting);
     }
 
-    // New method for UC5: Find greeting by ID
+    // UC5: Find greeting by ID
     public Optional<Greeting> getGreetingById(Long id) {
         return greetingRepository.findById(id);
+    }
+
+    // UC6: Retrieve all greeting messages
+    public List<Greeting> getAllGreetings() {
+        return greetingRepository.findAll();
     }
 }

@@ -26,7 +26,6 @@ public class Greeting {
     public void setId(Long id) {
         this.id = id;
     }
-
     public String getMessage() {
         return message;
     }
@@ -34,3 +33,4 @@ public class Greeting {
         this.message = message;
     }
 }
+

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -66,6 +67,12 @@ public class GreetingController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("{\"message\": \"Greeting not found for ID: " + id + "\"}");
         }
+    }
+
+    // UC6: GET endpoint to list all greeting messages in the repository
+    @GetMapping("/all")
+    public List<Greeting> getAllGreetings() {
+        return greetingService.getAllGreetings();
     }
 
     // Inner class for the basic greeting request (for UC1)
