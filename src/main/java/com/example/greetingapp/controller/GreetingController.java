@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/greeting")
 public class GreetingController {
@@ -42,22 +44,31 @@ public class GreetingController {
     }
 
     // UC4: POST endpoint to save a greeting message in the repository
-    // You can either pass the message directly or use parameters to generate one.
     @PostMapping("/save")
     public ResponseEntity<Greeting> saveGreeting(@RequestBody SaveGreetingRequest request) {
-        // If a custom message is provided, use it. Otherwise, generate one based on user attributes.
         String message;
         if (request.getMessage() != null && !request.getMessage().isEmpty()) {
             message = request.getMessage();
         } else {
-            // Reuse UC3 logic if no message provided
             message = greetingService.getGreeting(request.getFirstName(), request.getLastName());
         }
         Greeting savedGreeting = greetingService.saveGreeting(message);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedGreeting);
     }
 
-    // Inner class for basic greeting request (for UC1)
+    // UC5: GET endpoint to find a greeting by ID in the repository
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getGreetingById(@PathVariable Long id) {
+        Optional<Greeting> greetingOptional = greetingService.getGreetingById(id);
+        if (greetingOptional.isPresent()) {
+            return ResponseEntity.ok(greetingOptional.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("{\"message\": \"Greeting not found for ID: " + id + "\"}");
+        }
+    }
+
+    // Inner class for the basic greeting request (for UC1)
     public static class GreetingRequest {
         private String name;
         public String getName() { return name; }
@@ -77,10 +88,8 @@ public class GreetingController {
     // Inner class for UC4: Request to save a greeting message.
     public static class SaveGreetingRequest {
         private String message;
-        // Optional parameters to generate message if message is not provided.
         private String firstName;
         private String lastName;
-
         public String getMessage() {
             return message;
         }

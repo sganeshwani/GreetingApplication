@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GreetingRepository extends JpaRepository<Greeting, Long> {
-    // You can add custom query methods if needed
+    // You can add additional query methods if needed.
 }
