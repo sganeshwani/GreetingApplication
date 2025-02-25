@@ -75,6 +75,18 @@ public class GreetingController {
         return greetingService.getAllGreetings();
     }
 
+    // UC7: PUT endpoint to edit (update) a greeting message in the repository
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<?> updateGreeting(@PathVariable Long id, @RequestBody UpdateGreetingRequest request) {
+        Optional<Greeting> updatedGreeting = greetingService.updateGreeting(id, request.getMessage());
+        if (updatedGreeting.isPresent()) {
+            return ResponseEntity.ok(updatedGreeting.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("{\"message\": \"Greeting not found for ID: " + id + "\"}");
+        }
+    }
+
     // Inner class for the basic greeting request (for UC1)
     public static class GreetingRequest {
         private String name;
@@ -115,5 +127,12 @@ public class GreetingController {
         public void setLastName(String lastName) {
             this.lastName = lastName;
         }
+    }
+
+    // Inner class for UC7: Request to update a greeting message.
+    public static class UpdateGreetingRequest {
+        private String message;
+        public String getMessage() { return message; }
+        public void setMessage(String message) { this.message = message; }
     }
 }
