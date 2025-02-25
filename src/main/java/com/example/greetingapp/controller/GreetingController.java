@@ -1,5 +1,6 @@
 package com.example.greetingapp.controller;
 
+import com.example.greetingapp.model.Greeting;
 import com.example.greetingapp.service.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,14 +41,30 @@ public class GreetingController {
         return ResponseEntity.ok("{\"message\": \"" + message + "\"}");
     }
 
-    // Inner class for the basic greeting request (for UC1/others)
+    // UC4: POST endpoint to save a greeting message in the repository
+    // You can either pass the message directly or use parameters to generate one.
+    @PostMapping("/save")
+    public ResponseEntity<Greeting> saveGreeting(@RequestBody SaveGreetingRequest request) {
+        // If a custom message is provided, use it. Otherwise, generate one based on user attributes.
+        String message;
+        if (request.getMessage() != null && !request.getMessage().isEmpty()) {
+            message = request.getMessage();
+        } else {
+            // Reuse UC3 logic if no message provided
+            message = greetingService.getGreeting(request.getFirstName(), request.getLastName());
+        }
+        Greeting savedGreeting = greetingService.saveGreeting(message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedGreeting);
+    }
+
+    // Inner class for basic greeting request (for UC1)
     public static class GreetingRequest {
         private String name;
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
     }
 
-    // New inner class for UC3: Greeting request with first and last names.
+    // Inner class for UC3: Greeting request with first and last names.
     public static class UserGreetingRequest {
         private String firstName;
         private String lastName;
@@ -55,5 +72,32 @@ public class GreetingController {
         public void setFirstName(String firstName) { this.firstName = firstName; }
         public String getLastName() { return lastName; }
         public void setLastName(String lastName) { this.lastName = lastName; }
+    }
+
+    // Inner class for UC4: Request to save a greeting message.
+    public static class SaveGreetingRequest {
+        private String message;
+        // Optional parameters to generate message if message is not provided.
+        private String firstName;
+        private String lastName;
+
+        public String getMessage() {
+            return message;
+        }
+        public void setMessage(String message) {
+            this.message = message;
+        }
+        public String getFirstName() {
+            return firstName;
+        }
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+        public String getLastName() {
+            return lastName;
+        }
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
     }
 }
