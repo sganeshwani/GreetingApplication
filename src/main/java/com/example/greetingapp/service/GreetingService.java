@@ -51,4 +51,14 @@ public class GreetingService {
         }
         return Optional.empty();
     }
+
+    // UC8: Delete greeting by ID
+    public boolean deleteGreeting(Long id) {
+        Optional<Greeting> optionalGreeting = greetingRepository.findById(id);
+        if (optionalGreeting.isPresent()) {
+            greetingRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }

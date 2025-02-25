@@ -87,6 +87,18 @@ public class GreetingController {
         }
     }
 
+    // UC8: DELETE endpoint to remove a greeting message from the repository
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteGreeting(@PathVariable Long id) {
+        boolean deleted = greetingService.deleteGreeting(id);
+        if (deleted) {
+            return ResponseEntity.ok("{\"message\": \"Greeting deleted successfully.\"}");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("{\"message\": \"Greeting not found for ID: " + id + "\"}");
+        }
+    }
+
     // Inner class for the basic greeting request (for UC1)
     public static class GreetingRequest {
         private String name;
